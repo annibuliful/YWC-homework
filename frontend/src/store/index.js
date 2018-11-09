@@ -8,9 +8,14 @@ const store = new Vuex.Store({
     nearDays: []
   },
   mutations: {
+    getSomeEventsByDate (state, date) {
+      const filtered = state.allEvents.filter(value => {
+        return value.date === date
+      })
+      state.nearDays = filtered
+    },
     async getAllEvents (state) {
       const data = await service()
-      console.log(data)
       const allEvents = data.map(value => {
         return {
           title: value.title,
