@@ -1,20 +1,27 @@
 <template>
-  <!-- <div>{{ allEvents }}</div> -->
-  <vue-event-calendar
-    title="Tech Event Calendar"
-    :events="allEvents"
-    @day-changed="onDayChange"
-  >
-    <div v-for="(event, index) in nearDays" class="event-item" :key="index">
-      <div class="wrapper">
-        <h3 class="title" v-if="event.title.length < 40">{{ event.title }}</h3>
-        <h3 class="title" v-if="event.title.length > 40">
-          {{ event.title.substr(0, 55) }}
-        </h3>
-        <button class="add-info"><h3>Add Article</h3></button>
+  <div>
+    <vue-event-calendar
+      title="Tech Event Calendar"
+      :events="allEvents"
+      @day-changed="onDayChange"
+    >
+      <div
+        @click="selectedEvent(event)"
+        v-for="(event, index) in nearDays"
+        class="event-item"
+        :key="index"
+      >
+        <div class="wrapper">
+          <h3 class="title" v-if="event.title.length < 40">
+            {{ event.title }}
+          </h3>
+          <h3 class="title" v-if="event.title.length > 40">
+            {{ event.title.substr(0, 55) }}
+          </h3>
+        </div>
       </div>
-    </div>
-  </vue-event-calendar>
+    </vue-event-calendar>
+  </div>
 </template>
 <script>
 export default {
@@ -29,6 +36,10 @@ export default {
   methods: {
     onDayChange: function({ date, events }) {
       this.$store.commit('getSomeEventsByDate', date)
+    },
+    selectedEvent: function(event) {
+      this.$store.commit('selectedEvent', event)
+      this.$router.push('/articles')
     }
   },
   created() {
@@ -50,5 +61,9 @@ export default {
   border-radius: 10px;
   cursor: pointer;
   width: 60%;
+}
+
+.title {
+  line-height: 0px;
 }
 </style>

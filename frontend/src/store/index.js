@@ -5,7 +5,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     allEvents: [],
-    nearDays: []
+    nearDays: [],
+    selectedEvent: {}
   },
   mutations: {
     getSomeEventsByDate (state, date) {
@@ -13,6 +14,9 @@ const store = new Vuex.Store({
         return value.date === date
       })
       state.nearDays = filtered
+    },
+    selectedEvent (state, event) {
+      state.selectedEvent = event
     },
     async getAllEvents (state) {
       const data = await service()
