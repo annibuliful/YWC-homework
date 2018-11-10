@@ -1,20 +1,35 @@
-<template> </template>
+<template>
+  <div class="container">
+    <card
+      v-for="(event, index) in listArticles"
+      :key="index"
+      :title="event.title"
+      :link="event.link"
+    />
+    <button>Add Article</button>
+  </div>
+</template>
 <script>
 import axios from 'axios'
+import CardComponent from '@/components/ArticleCard'
 export default {
+  components: {
+    card: CardComponent
+  },
   data() {
     return {
       listArticles: []
     }
   },
   created() {
-    const eventName = this.$route.params.title
+    const eventName = this.$store.state.selectedEvent.title
     axios
       .get(
-        `http://localhost:5000/ywchomework-3cef1/us-central1/getEventArticle?eventName=${eventName}`
+        `https://us-central1-ywchomework-3cef1.cloudfunctions.net/getEventArticle?eventName=${eventName}`
       )
-      .then(data => {
+      .then(({ data }) => {
         console.log(data)
+        this.listArticles = data
       })
       .catch(error => {
         console.log(error)
@@ -22,3 +37,12 @@ export default {
   }
 }
 </script>
+<style scoped>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
