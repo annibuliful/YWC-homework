@@ -12,7 +12,10 @@
       <input type="text" v-model="link" />
     </div>
     <div style="width: 100%;">
-      <button @click="addArticle">add Article</button>
+      <button class="btn" @click="addArticle">add Article</button>
+      <h2 v-if="created">Created!</h2>
+      <h5 v-if="isNotInput" style="color: red">Please Input all!!!!!!!</h5>
+      <h5 v-if="error" style="color: red">Service Unavailable!!!</h5>
     </div>
   </div>
 </template>
@@ -28,20 +31,34 @@ export default {
   data() {
     return {
       title: '',
-      link: ''
+      link: '',
+      created: false,
+      isNotInput: false,
+      error: false
     }
   },
   methods: {
     addArticle: async function() {
-      const data = await axios.post(
-        'http://localhost:5000/ywchomework-3cef1/us-central1/addArticle',
-        qs.stringify({
-          title: this.title,
-          link: this.link,
-          eventName: this.$store.state.selectedEvent.title
-        })
-      )
-      console.log(data)
+      if (this.title !== '' && this.link !== '') {
+        try {
+          const data = await axios.post(
+            'http://localhost:5000/ywchomework-3cef1/us-central1/addArticle',
+            qs.stringify({
+              title: this.title,
+              link: this.link,
+              eventName: this.$store.state.selectedEvent.title
+            })
+          )
+          this.title = ''
+          this.link = ''
+          this.created = true
+        } catch (e) {
+          console.log(e)
+          this.error = true
+        }
+      } else {
+        this.isNotInput = true
+      }
     }
   }
 }
@@ -64,5 +81,15 @@ input {
   width: 60%;
   margin-left: 20%;
   margin-right: 20%;
+}
+.btn {
+  margin-top: 50px;
+  border-radius: 10px;
+  border-color: rgb(242, 149, 67);
+  background-color: rgb(242, 149, 67);
+  color: white;
+  font-size: 28px;
+  height: 40px;
+  width: 100%;
 }
 </style>
